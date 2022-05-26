@@ -14,6 +14,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Grid>
+
                             <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1"/>
                             <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
                             <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" VerticalAlignment="Center"
@@ -42,7 +43,7 @@
         <Image Stretch="Fill" Source="/images/amogus.png" HorizontalAlignment="Right"></Image>
         <Button Name="PlayButton" Content="Checking For Updates" Click="PlayButton_Click" Height="60" FontSize="28" FontWeight="Bold" Foreground="#FF4E626B" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" BorderBrush="#FF9DC7D7" Background="#FFD8EFFF" Padding="10,1,10,1" />
         <TextBlock Text="meow" Name="MyTextblock" FontSize="28" Margin="0,0,0,144" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="100" FontWeight="Normal" FontStyle="Normal" TextAlignment="Center"  ></TextBlock>
-        <TextBox Name="MyTextbox" FontSize="28" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal" TextAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
+        <!--<TextBox Name="MyTextbox" FontSize="28" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal" TextAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
             <TextBox.Style>
                 <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                     <Style.Resources>
@@ -65,9 +66,14 @@
                     </Style.Triggers>
                 </Style>
             </TextBox.Style>
-        </TextBox>
+        </TextBox>-->
+        <ComboBox  Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
 
 
+            
+            
+            
+        </ComboBox>
 
     </Grid>
 </Window>
