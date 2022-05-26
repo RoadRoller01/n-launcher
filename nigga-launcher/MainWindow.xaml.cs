@@ -27,18 +27,46 @@ namespace nigga_launcher
         private string gamesPath;
         private GitHubClient client;
 
+        public async void CheckGames()
+        {
+            IReadOnlyList<Repository> reps = await client.Repository.GetAllForUser("RoadRoller01");
+            
+
+            for (int i = 0;i < reps.Count; i++)
+            {
+                try
+                {
+                    Repository current = reps[i];
+                    if (reps[i].Topics[0] == "game")
+                    {
+                        GamesList.Items.Add(current.Name);
+                    }
+
+                }catch(ArgumentOutOfRangeException)
+                {
+                    continue;
+                }
+            }
+
+        }
         public MainWindow()
         {
             InitializeComponent();
+
+            /* --- check games dir exists if it didn't, create dir --- */
             gamesPath = Directory.GetCurrentDirectory() + "/games";
-            
+
             if (!Directory.Exists(gamesPath))
             {
                 Directory.CreateDirectory(gamesPath);
             }
+            /* --- end --- */
+
             client = new GitHubClient(new ProductHeaderValue("amogusBalls123hentai"));
-            
+            CheckGames();
         }
+
+        
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
@@ -60,7 +88,7 @@ namespace nigga_launcher
             // Download the file
             webClient.DownloadFileAsync(latestAssetUri, gamesPath + "/build.zip");
 
-           /* MessageBox.Show("nia")*/;
+           // MessageBox.Show("nia");
 
         }
         
