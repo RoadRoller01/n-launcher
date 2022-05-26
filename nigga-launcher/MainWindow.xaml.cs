@@ -25,17 +25,19 @@ namespace nigga_launcher
     public partial class MainWindow : Window
     {
         private string gamesPath;
+        private GitHubClient client;
 
         public MainWindow()
         {
             InitializeComponent();
             gamesPath = Directory.GetCurrentDirectory() + "/games";
-
+            
             if (!Directory.Exists(gamesPath))
             {
                 Directory.CreateDirectory(gamesPath);
             }
-
+            client = new GitHubClient(new ProductHeaderValue("amogusBalls123hentai"));
+            
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -44,9 +46,11 @@ namespace nigga_launcher
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            var client = new GitHubClient(new ProductHeaderValue("amogusBalls123hentai"));
+            
             var releases = await client.Repository.Release.GetAll("RoadRoller01", "amogus");
             var latestAsset = releases[0].Assets[0];
+            
+
             // Download with WebClient
             using var webClient = new WebClient();
             webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
@@ -56,9 +60,11 @@ namespace nigga_launcher
             // Download the file
             webClient.DownloadFileAsync(latestAssetUri, gamesPath + "/build.zip");
 
-            MessageBox.Show("nia");
+           /* MessageBox.Show("nia")*/;
 
         }
+        
+
     }
 }
 
