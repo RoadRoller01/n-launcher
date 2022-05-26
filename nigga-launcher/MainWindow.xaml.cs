@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Net;
+using System.IO;
 
 namespace nigga_launcher
 {
@@ -23,14 +24,22 @@ namespace nigga_launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private string gamesPath;
+
         public MainWindow()
         {
             InitializeComponent();
+            gamesPath = Directory.GetCurrentDirectory() + "/games";
+
+            if (!Directory.Exists(gamesPath))
+            {
+                Directory.CreateDirectory(gamesPath);
+            }
+
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-
         }
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -45,12 +54,9 @@ namespace nigga_launcher
 
             var latestAssetUri = new Uri(latestAsset.Url);
             // Download the file
-            webClient.DownloadFileAsync(latestAssetUri, "C:/sus/meow.zip");
+            webClient.DownloadFileAsync(latestAssetUri, gamesPath + "/build.zip");
 
-            MessageBox.Show(
-                "The latest " + "\n" +
-                latestAsset.Url + "\n" +
-                latestAsset.Name);
+            MessageBox.Show("nia");
 
         }
     }
