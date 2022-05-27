@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Net;
 using System.IO;
+using System.Diagnostics;
 
 namespace nigga_launcher
 {
@@ -43,7 +44,6 @@ namespace nigga_launcher
         public MainWindow()
         {
             InitializeComponent();
-            BackroundImage.Source = new BitmapImage(new Uri(AppDomain.CurrentDomain.BaseDirectory + @"images\amogus.png"));
 
             /* --- check games dir exists if it didn't, create dir --- */
             gamesPath = AppDomain.CurrentDomain.BaseDirectory + "/games/";
@@ -56,12 +56,14 @@ namespace nigga_launcher
 
             client = new GitHubClient(new ProductHeaderValue("amogusBalls123hentai"));
             CheckGames();
+
         }
 
         
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
+            
         }
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
