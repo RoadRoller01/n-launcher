@@ -26,11 +26,12 @@ namespace nigga_launcher
     {
         private string gamesPath;
         private GitHubClient client;
+        private List<Repository> gamesRep;
 
         public async void CheckGames()
         {
             IReadOnlyList<Repository> reps = await client.Repository.GetAllForUser("RoadRoller01");
-            
+            gamesRep = new List<Repository>();
 
             for (int i = 0;i < reps.Count; i++)
             {
@@ -39,6 +40,7 @@ namespace nigga_launcher
                     Repository current = reps[i];
                     if (reps[i].Topics[0] == "game")
                     {
+                        gamesRep.Add(current);
                         GamesList.Items.Add(current.Name);
                     }
 
@@ -54,7 +56,7 @@ namespace nigga_launcher
             InitializeComponent();
 
             /* --- check games dir exists if it didn't, create dir --- */
-            gamesPath = Directory.GetCurrentDirectory() + "/games";
+            gamesPath = Directory.GetCurrentDirectory() + "/games/";
 
             if (!Directory.Exists(gamesPath))
             {
@@ -74,19 +76,33 @@ namespace nigga_launcher
 
         private async void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            var releases = await client.Repository.Release.GetAll("RoadRoller01", "amogus");
-            var latestAsset = releases[0].Assets[0];
-            
+            if (GamesList.SelectedIndex != -1)
+            {
+                // get selected game url
+                Repository gameRep = gamesRep[GamesList.SelectedIndex];
+                Release latestRelease = await client.Repository.Release.GetLatest(gameRep.Id);
+                Uri gameUri = new Uri(latestRelease.Assets[0].Url);
+
+                // Download game file
+                WebClient webClient = new WebClient();
+
+                webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
+                webClient.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
+                
+                webClient.DownloadFileAsync(gameUri, gamesPath + "game.zip");
+
+                // debug stuff
+                //Debug.WriteLine(latestRelease.Assets[0].Name);
+                //Debug.WriteLine(latestRelease.Assets[0].BrowserDownloadUrl);
+                //Debug.WriteLine(latestRelease.Assets[0].Url);
+            }
+            else
+            {
+                MessageBox.Show("are you nigga select game");
+            }
 
             // Download with WebClient
-            using var webClient = new WebClient();
-            webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
-            webClient.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
-
-            var latestAssetUri = new Uri(latestAsset.Url);
-            // Download the file
-            webClient.DownloadFileAsync(latestAssetUri, gamesPath + "/build.zip");
+            
 
            // MessageBox.Show("nia");
 
