@@ -10,24 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="images\*" />
+    <None Remove="images\amogus.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="images\*">
+    <Content Include="images\amogus.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Remove="images\amogus.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="images\amogus.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Octokit" Version="0.51.0" />
