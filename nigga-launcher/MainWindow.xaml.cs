@@ -9,6 +9,17 @@ using System.Diagnostics;
 
 namespace nigga_launcher
 {
+    enum LauncherStatus
+    {
+        loading,
+        play,
+        downloadingGame,
+        downloadingUpdate,
+        downloading,
+        failed
+    }
+
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -17,6 +28,44 @@ namespace nigga_launcher
         private string gamesPath;
         private GitHubClient client;
         private List<Repository> gamesRep;
+
+
+        private LauncherStatus _status;
+        internal LauncherStatus Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
+                switch (_status)
+                {
+                    case LauncherStatus.loading:
+                        PlayButton.Content = "Loading...";
+                        // --------------------------
+                        // add loading dots animation
+                        // --------------------------
+                        break;
+                    case LauncherStatus.play:
+                        PlayButton.Content = "Play";
+                        break;
+                    case LauncherStatus.downloadingGame:
+                        PlayButton.Content = "Download";
+                        break;
+                    case LauncherStatus.downloadingUpdate:
+                        PlayButton.Content = "Download Update";
+                        break;
+                    case LauncherStatus.downloading:
+                        PlayButton.Content = "Downloading";
+                        // add dots animation? maybe
+                        break;
+                    case LauncherStatus.failed:
+                        PlayButton.Content = "Download Failed - Retry";
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         public async void CheckGames()
         {
