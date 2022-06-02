@@ -10,8 +10,8 @@
         Title="Launcher" Height="576" Width="1080">
     <Grid>
         <Image Name="BackroundImage" Source="pack://siteoforigin:,,/images/amogus.png" Stretch="Fill" HorizontalAlignment="Right"></Image>
-        
-        <Button Name="PlayButton" Content="Checking For Updates" Click="PlayButton_Click" Height="60" FontSize="28" FontWeight="Bold" Foreground="#FF4E626B" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" BorderBrush="#FF9DC7D7" Background="#FFD8EFFF" Padding="10,1,10,1" />
+
+        <Button Name="PlayButton" Content="Loading" Click="PlayButton_Click" Height="60" FontSize="28" FontWeight="Bold" Foreground="#FF4E626B" Margin="0,0,0,15" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" BorderBrush="#FF9DC7D7" Background="#FFD8EFFF" Padding="10,1,10,1" />
         <TextBlock Text="Games" Name="MyTextblock" FontSize="28" Margin="0,0,0,144" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="100" FontWeight="Normal" FontStyle="Normal" TextAlignment="Center" Cursor="ArrowCD"  />
         <!--<TextBox Name="MyTextbox" FontSize="28" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal" TextAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
             <TextBox.Style>
@@ -37,13 +37,12 @@
                 </Style>
             </TextBox.Style>
         </TextBox>-->
-        <ComboBox Name="GamesList" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
-
-
-            
-            
-            
-        </ComboBox>
+        <ComboBox Name="GamesList" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></ComboBox>
+        
+        <StackPanel Name="MyDownloadProgressBarPanel"  Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,77" Visibility="Hidden">
+            <TextBlock Name="MyDownloadProgressBarText" FontSize="10" />
+            <ProgressBar Name="MyDownloadProgressBar"  Height="10" Width="236" ></ProgressBar>
+        </StackPanel>
 
     </Grid>
 </Window>
