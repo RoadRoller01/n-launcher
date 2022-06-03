@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Text.Json;
 
-namespace nigga_launcher
+namespace n_launcher
 {
     enum LauncherStatus
     {

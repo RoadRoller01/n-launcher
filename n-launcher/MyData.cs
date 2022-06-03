@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace nigga_launcher
+namespace n_launcher
 {
     class MyData
     {

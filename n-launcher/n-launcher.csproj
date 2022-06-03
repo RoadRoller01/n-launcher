@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
-    <RootNamespace>nigga_launcher</RootNamespace>
+    <RootNamespace>n_launcher</RootNamespace>
     <UseWPF>true</UseWPF>
     <StartupObject></StartupObject>
     <ApplicationIcon />

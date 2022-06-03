@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace nigga_launcher
+namespace n_launcher
 {
     /// <summary>
     /// Interaction logic for App.xaml
