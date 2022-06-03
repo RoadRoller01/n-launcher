@@ -114,7 +114,6 @@ namespace nigga_launcher
             /* --- end --- */
 
             ReadConfigFile();
-
             client = new GitHubClient(new ProductHeaderValue("amogusBalls123hentai"));
             if (token.Length != 0)
             {
@@ -127,22 +126,24 @@ namespace nigga_launcher
 
         void ReadConfigFile()
         {
+
+
+
             string jsonString = File.ReadAllText(SaveFile);
             data = JsonSerializer.Deserialize<MyData>(jsonString)!;
+
 
             username = data.username;
             token = data.token;
 
         }
 
-
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            
-        }
 
-        private async void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
+        }
+        public async void  DownloadGame() {
+
             if (GamesList.SelectedIndex != -1)
             {
                 // get selected game url
@@ -150,7 +151,7 @@ namespace nigga_launcher
                 Release latestRelease = await client.Repository.Release.GetLatest(gameRep.Id);
                 Uri gameUri = new Uri(latestRelease.Assets[0].BrowserDownloadUrl);
 
- 
+
                 // Download game file
                 WebClient webClient = new WebClient();
                 webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
@@ -171,11 +172,52 @@ namespace nigga_launcher
             {
                 MessageBox.Show("are you nigga select game");
             }
+        }
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            
+            CheckGameVer();
 
         }
 
 
+        private async void CheckGameVer()
+        {
+            Repository SelectedgameRep = gamesRep[GamesList.SelectedIndex];
+            IReadOnlyList<RepositoryTag> repsTags = await client.Repository.GetAllTags(SelectedgameRep.Id);
 
+
+
+            if (data.Games.ContainsValue(repsTags[0].Name) && data.Games.ContainsKey(SelectedgameRep.Name))
+            {
+
+                MessageBox.Show("game up to date");
+
+                return;
+            }
+            else if (!data.Games.ContainsValue(repsTags[0].Name) && !data.Games.ContainsKey(SelectedgameRep.Name))
+            {
+
+                data.Games.Add(SelectedgameRep.Name, repsTags[0].Name);
+
+            }
+            else
+            {
+
+                data.Games.TryAdd(default,repsTags[0].Name);
+                DownloadGame();
+
+            }
+
+
+
+
+            string jsonString = JsonSerializer.Serialize(data);
+            File.WriteAllText(SaveFile, jsonString);
+
+           
+        }
 
 
 
