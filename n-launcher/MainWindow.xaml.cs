@@ -78,11 +78,11 @@ namespace n_launcher
         public async void CheckGames()
         {
             IReadOnlyList<Repository> reps = await client.Repository.GetAllForUser(username);
-            
+
 
             gamesRep = new List<Repository>();
 
-            for (int i = 0;i < reps.Count; i++)
+            for (int i = 0; i < reps.Count; i++)
             {
                 try
                 {
@@ -93,7 +93,8 @@ namespace n_launcher
                         GamesList.Items.Add(current.Name);
                     }
 
-                }catch(ArgumentOutOfRangeException)
+                }
+                catch (ArgumentOutOfRangeException)
                 {
                     continue;
                 }
@@ -120,7 +121,7 @@ namespace n_launcher
                 var tokenAuth = new Credentials(token);
                 client.Credentials = tokenAuth;
             }
-            
+
             CheckGames();
         }
 
@@ -142,43 +143,44 @@ namespace n_launcher
         {
 
         }
-        public async void  DownloadGame() {
+        public async void DownloadGame()
+        {
 
+
+            // get selected game url
+            Repository gameRep = gamesRep[GamesList.SelectedIndex];
+            Release latestRelease = await client.Repository.Release.GetLatest(gameRep.Id);
+            Uri gameUri = new Uri(latestRelease.Assets[0].BrowserDownloadUrl);
+
+
+            // Download game file
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
+            webClient.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
+
+
+            webClient.DownloadProgressChanged += DownloadProgress;
+            webClient.DownloadFileCompleted += DownloadProgressCompleted;
+
+            MyDownloadProgressBarPanel.Visibility = Visibility.Visible;
+
+            webClient.DownloadFileAsync(gameUri, gamesPath + "game.zip");
+
+
+
+
+        }
+        private void PlayButton_Click(object sender, RoutedEventArgs e)
+        {
             if (GamesList.SelectedIndex != -1)
             {
-                // get selected game url
-                Repository gameRep = gamesRep[GamesList.SelectedIndex];
-                Release latestRelease = await client.Repository.Release.GetLatest(gameRep.Id);
-                Uri gameUri = new Uri(latestRelease.Assets[0].BrowserDownloadUrl);
 
-
-                // Download game file
-                WebClient webClient = new WebClient();
-                webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
-                webClient.Headers.Add(HttpRequestHeader.Accept, "application/octet-stream");
-
-
-                webClient.DownloadProgressChanged += DownloadProgress;
-                webClient.DownloadFileCompleted += DownloadProgressCompleted;
-
-                MyDownloadProgressBarPanel.Visibility = Visibility.Visible;
-
-                webClient.DownloadFileAsync(gameUri, gamesPath + "game.zip");
-
-
-
+                CheckGameVer();
             }
             else
             {
                 MessageBox.Show("are you nigga select game");
             }
-        }
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-            
-            CheckGameVer();
-
         }
 
 
@@ -205,7 +207,7 @@ namespace n_launcher
             else
             {
 
-                data.Games.TryAdd(default,repsTags[0].Name);
+                data.Games.TryAdd(default, repsTags[0].Name);
                 DownloadGame();
 
             }
@@ -216,7 +218,7 @@ namespace n_launcher
             string jsonString = JsonSerializer.Serialize(data);
             File.WriteAllText(SaveFile, jsonString);
 
-           
+
         }
 
 
@@ -233,7 +235,7 @@ namespace n_launcher
 
             MyDownloadProgressBarText.Text = $"{received} / {total}";
         }
-        
+
         private void DownloadProgressCompleted(object sender, AsyncCompletedEventArgs e)
         {
             MyDownloadProgressBarPanel.Visibility = Visibility.Hidden;
