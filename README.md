@@ -8,4 +8,4 @@ https://github.com/RoadRoller01/n-launcher/blob/12e426abb66f0d60e32362838363f43d
 to add a game to the launcher, the game repository must have game topic as its first topic.
 
 ## Development requirement
-.net6 or late
+.net6
