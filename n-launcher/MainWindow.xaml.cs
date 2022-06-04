@@ -15,8 +15,8 @@ enum LauncherStatus
 {
     loading,
     play,
-    downloadingGame,
-    downloadingUpdate,
+    downloadGame,
+    downloadUpdate,
     downloading,
     failed
 }
@@ -34,11 +34,10 @@ public partial class MainWindow : Window
     private string gamesPath;
     private GitHubClient client;
     private List<Repository> gamesRep;
-    JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
+    private readonly JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
 
 
-
-    private LauncherStatus _status;
+    private LauncherStatus _status = LauncherStatus.loading;
     internal LauncherStatus Status
     {
         get => _status;
@@ -56,10 +55,10 @@ public partial class MainWindow : Window
                 case LauncherStatus.play:
                     PlayButton.Content = "Play";
                     break;
-                case LauncherStatus.downloadingGame:
+                case LauncherStatus.downloadGame:
                     PlayButton.Content = "Download";
                     break;
-                case LauncherStatus.downloadingUpdate:
+                case LauncherStatus.downloadUpdate:
                     PlayButton.Content = "Download Update";
                     break;
                 case LauncherStatus.downloading:
@@ -90,12 +89,13 @@ public partial class MainWindow : Window
                 if (reps[i].Topics[0] == "game")
                 {
                     gamesRep.Add(current);
-                    GamesList.Items.Add(current.Name.Replace("-"," ").Replace("_"," "));
+                    GamesList.Items.Add(current.Name.Replace("-", " ").Replace("_", " "));
                 }
 
             }
             catch (ArgumentOutOfRangeException)
             {
+                // becouse some repositories have 0 Topic
                 continue;
             }
         }
@@ -103,7 +103,6 @@ public partial class MainWindow : Window
     }
     public MainWindow()
     {
-
         InitializeComponent();
         /* --- check games dir exists if it didn't, create dir --- */
         gamesPath = AppDomain.CurrentDomain.BaseDirectory + "/games/";
@@ -123,6 +122,7 @@ public partial class MainWindow : Window
         }
 
         CheckGames();
+
     }
 
     void ReadSaveFile()
@@ -139,11 +139,6 @@ public partial class MainWindow : Window
 
     }
 
-    private void Window_ContentRendered(object sender, EventArgs e)
-    {
-
-    }
-
 
     /// <summary>
     /// Download and extract given uri zip file
@@ -154,7 +149,7 @@ public partial class MainWindow : Window
     {
         String gameFile = gamesPath + "game.zip";
         WebClient webClient = new WebClient();
-    try { Directory.Delete(gamesPath + GamesList.SelectedValue , true); } catch { }
+        try { Directory.Delete(gamesPath + GamesList.SelectedValue, true); } catch { }
 
 
         webClient.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
@@ -175,49 +170,100 @@ public partial class MainWindow : Window
     private async void PlayButton_Click(object sender, RoutedEventArgs e)
     {
         PlayButton.IsEnabled = false;
-        if (GamesList.SelectedIndex != -1)
+        switch (_status)
         {
-            Repository selectedGameRep = gamesRep[GamesList.SelectedIndex];
-            Release latestRelease = await client.Repository.Release.GetLatest(selectedGameRep.Id);
-            String savedGameVer = data.Games.GetValueOrDefault(selectedGameRep.Name);
+            case LauncherStatus.loading:
+                MessageBox.Show("are you black!? you cann't wait???");
+                break;
+            case LauncherStatus.play:
+                // Play
 
-            if (savedGameVer == latestRelease.TagName)
-            {
 
-                MessageBox.Show("game up to date");
-            }
-            else
-            {
-                
+                break;
+            case LauncherStatus.downloadGame:
+                Status = LauncherStatus.downloading;
+                // Download
+                Repository selectedGameRep = gamesRep[GamesList.SelectedIndex];
+                Release latestRelease = await client.Repository.Release.GetLatest(selectedGameRep.Id);
+
+
                 await DownloadGame(new Uri(latestRelease.Assets[0].BrowserDownloadUrl));
-                if (savedGameVer == default)
-                {
-                    data.Games.Add(selectedGameRep.Name, latestRelease.TagName);
-                }
-                else
-                {
-                    data.Games.Remove(selectedGameRep.Name);
-                    data.Games.Add(selectedGameRep.Name, latestRelease.TagName);
-                }
+
+                data.Games.Add(selectedGameRep.Name, latestRelease.TagName);
+
 
                 string jsonString = JsonSerializer.Serialize(data, options);
                 File.WriteAllText(SaveFile, jsonString);
-            }
+                Status = LauncherStatus.play;
+                break;
+            case LauncherStatus.downloadUpdate:
+                // Download Update
+                break;
+            case LauncherStatus.failed:
+                // Download Failed - Retry
+
+
+                break;
+            default:
+                break;
         }
-        else
-        {
-            MessageBox.Show("are you nigga select game");
-        }
-
-
-
         PlayButton.IsEnabled = true;
+    }
+
+    private async void GamesList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        Status = LauncherStatus.loading;
+        Repository selectedGameRep = gamesRep[GamesList.SelectedIndex];
+        Release latestRelease = await client.Repository.Release.GetLatest(selectedGameRep.Id);
+        string savedGameVer = data.Games.GetValueOrDefault(selectedGameRep.Name);
+
+        if (savedGameVer == latestRelease.TagName)
+        {
+            Status = LauncherStatus.play;
+        }
+        else if (savedGameVer == default)
+        {
+            Status = LauncherStatus.downloadGame;
+        } else
+        {
+            await DownloadGame(new Uri(latestRelease.Assets[0].BrowserDownloadUrl));
+            
+            
+            data.Games.Remove(selectedGameRep.Name);
+            data.Games.Add(selectedGameRep.Name, latestRelease.TagName);
+            
+
+            string jsonString = JsonSerializer.Serialize(data, options);
+            File.WriteAllText(SaveFile, jsonString);
+        }
     }
 
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // ---------------- Download Progress stuff ---------------- //
     private void DownloadProgress(object sender, DownloadProgressChangedEventArgs e)
     {
@@ -237,7 +283,6 @@ public partial class MainWindow : Window
         MyDownloadProgressBar.Value = 0;
         MyDownloadProgressBarText.Text = "";
     }
-
 
 
 }

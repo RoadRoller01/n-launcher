@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:n_launcher"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        ContentRendered="Window_ContentRendered"
         Title="Launcher" Height="576" Width="1080">
     <Grid>
         <Image Name="BackroundImage" Source="pack://siteoforigin:,,/images/amogus.png" Stretch="Fill" HorizontalAlignment="Right"></Image>
@@ -37,7 +36,7 @@
                 </Style>
             </TextBox.Style>
         </TextBox>-->
-        <ComboBox Name="GamesList" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center"></ComboBox>
+        <ComboBox Name="GamesList" SelectedIndex="0" Margin="0,0,0,100" VerticalAlignment="Bottom" HorizontalAlignment="Center" MinWidth="150" FontWeight="Normal" FontStyle="Normal"  HorizontalContentAlignment="Left" VerticalContentAlignment="Center" SelectionChanged="GamesList_SelectionChanged" ></ComboBox>
         
         <StackPanel Name="MyDownloadProgressBarPanel"  Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,77" Visibility="Hidden">
             <TextBlock Name="MyDownloadProgressBarText" FontSize="10" />
