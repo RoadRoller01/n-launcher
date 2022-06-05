@@ -5,7 +5,6 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <RootNamespace>n_launcher</RootNamespace>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon />
   </PropertyGroup>
 
   <ItemGroup>

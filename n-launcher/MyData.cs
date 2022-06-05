@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace n_launcher
 {
@@ -10,7 +6,7 @@ namespace n_launcher
     {
         public string username { get; set; }
         public string token { get; set; }
-        public Dictionary<string,string> Games { get; set; }
-       
+        public Dictionary<string, string> Games { get; set; }
+
     }
 }

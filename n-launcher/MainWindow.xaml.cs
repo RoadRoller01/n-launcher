@@ -27,7 +27,7 @@ enum LauncherStatus
 /// </summary>
 public partial class MainWindow : Window
 {
-    private string SaveFile = "config.json";
+    private readonly string saveFile = "config.json";
     private string username = "RoadRoller01";
     private string token = "";
     private MyData data;
@@ -129,9 +129,21 @@ public partial class MainWindow : Window
     {
 
 
+        try
+        {
+            string jsonString = File.ReadAllText(saveFile);
+            data = JsonSerializer.Deserialize<MyData>(jsonString)!;
+        }
+        catch (FileNotFoundException)
+        {
+            data = new MyData();
+            data.username = username;
+            data.token = token;
+            data.Games = new Dictionary<string, string>();
 
-        string jsonString = File.ReadAllText(SaveFile);
-        data = JsonSerializer.Deserialize<MyData>(jsonString)!;
+            File.WriteAllText(saveFile, JsonSerializer.Serialize(data, options));
+        }
+
 
 
         username = data.username;
@@ -178,6 +190,8 @@ public partial class MainWindow : Window
             case LauncherStatus.play:
                 // Play
 
+                String gameName = GamesList.SelectedItem.ToString();
+                System.Diagnostics.Process.Start(gamesPath + gameName + "/" + gameName + ".exe");
 
                 break;
             case LauncherStatus.downloadGame:
@@ -193,7 +207,7 @@ public partial class MainWindow : Window
 
 
                 string jsonString = JsonSerializer.Serialize(data, options);
-                File.WriteAllText(SaveFile, jsonString);
+                File.WriteAllText(saveFile, jsonString);
                 Status = LauncherStatus.play;
                 break;
             case LauncherStatus.downloadUpdate:
@@ -224,17 +238,18 @@ public partial class MainWindow : Window
         else if (savedGameVer == default)
         {
             Status = LauncherStatus.downloadGame;
-        } else
+        }
+        else
         {
             await DownloadGame(new Uri(latestRelease.Assets[0].BrowserDownloadUrl));
-            
-            
+
+
             data.Games.Remove(selectedGameRep.Name);
             data.Games.Add(selectedGameRep.Name, latestRelease.TagName);
-            
+
 
             string jsonString = JsonSerializer.Serialize(data, options);
-            File.WriteAllText(SaveFile, jsonString);
+            File.WriteAllText(saveFile, jsonString);
         }
     }
 
