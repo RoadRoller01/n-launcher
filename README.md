@@ -23,7 +23,8 @@ game name is the game repository name ("_" and "-" replaced with " "),
 [example](https://github.com/RoadRoller01/NSimulator/releases/latest).
 
 
-## Development requirement
+
+# Development requirement
 .net6  
 having the will to live 
 
