@@ -26,3 +26,6 @@ game name is the game repository name ("_" and "-" replaced with " "),
 ## Development requirement
 .net6  
 having the will to live 
+
+## Development ideas
+launcher for the launcher
